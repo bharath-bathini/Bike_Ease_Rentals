@@ -1,0 +1,37 @@
+.rents-container {
+    max-width: 900px;
+    margin-right: 300px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    margin-right: 230px;
+  }
+  
+  .rents-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .rents-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .rents-table th,
+  .rents-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .rents-table th {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .rents-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  

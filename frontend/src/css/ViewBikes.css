@@ -1,0 +1,64 @@
+/* Styles for viewing bikes */
+.bike-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.bike-item {
+    width: 30%;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bike-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.bike-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.bike-item h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.bike-item p {
+    font-size: 14px;
+    color: #666;
+}
+
+.bike-item .status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #28a745; /* Green for active */
+}
+
+.bike-item .status.inactive {
+    color: #dc3545; /* Red for inactive */
+}
+
+.bike-item .bike-actions {
+    margin-top: 10px;
+}
+
+.bike-item .bike-actions a {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.bike-item .bike-actions a:hover {
+    color: #0056b3;
+}

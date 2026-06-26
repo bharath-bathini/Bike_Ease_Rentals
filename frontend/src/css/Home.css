@@ -1,0 +1,12 @@
+.content{
+    display: flex;
+    justify-content: center;
+}
+.content h1{
+    text-align: center;
+    color: #00a8ff;
+}
+img{
+    width: 800px;
+    height: 500px;
+}

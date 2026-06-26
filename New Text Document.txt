@@ -1,0 +1,125 @@
+class Bike(models.Model):
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('rented', 'Rented'),
+        ('maintenance', 'Maintenance')
+    ]
+    
+    bike_id = models.CharField(max_length=20, unique=True)
+    model_name = models.CharField(max_length=100)
+    bike_type = models.CharField(max_length=50, choices=[('electric', 'Electric'), ('manual', 'Manual')])
+    location = models.CharField(max_length=200)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
+    price_per_hour = models.DecimalField(max_digits=6, decimal_places=2)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.model_name} - {self.bike_id}"
+
+# Rental Model
+class Rental(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(default=now)
+    end_time = models.DateTimeField(null=True, blank=True)
+    total_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.bike.model_name}"
+
+# Payment Model
+class Payment(models.Model):
+    rental = models.ForeignKey(Rental, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
+    payment_method = models.CharField(max_length=50, choices=[('credit_card', 'Credit Card'), ('paypal', 'PayPal'), ('upi', 'UPI')])
+    payment_status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('completed', 'Completed'), ('failed', 'Failed')], default='pending')
+    transaction_id = models.CharField(max_length=100, unique=True)
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.amount} - {self.payment_status}"
+
+# Feedback Model
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    comment = models.TextField()
+    submitted_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.rating} Stars"
+
+# Inventory Management for Admin
+class Inventory(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE)
+    last_checked = models.DateTimeField(auto_now=True)
+    maintenance_required = models.BooleanField(default=False)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.bike.model_name} - {'Maintenance Required' if self.maintenance_required else 'OK'}"
+
+
+from .models import Bike, Rental, Payment, Feedback, Inventory
+
+# Bike Serializer
+class BikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bike
+        fields = '__all__'
+
+# Rental Serializer
+class RentalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rental
+        fields = '__all__'
+
+# Payment Serializer
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+# Feedback Serializer
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'
+
+# Inventory Serializer
+class InventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inventory
+        fields = '__all__'
+
+
+from .models import Bike, Rental, Payment, Feedback, Inventory
+from .serializers import BikeSerializer, RentalSerializer, PaymentSerializer, FeedbackSerializer, InventorySerializer
+
+# Bike ViewSet
+class BikeViewSet(viewsets.ModelViewSet):
+    queryset = Bike.objects.all()
+    serializer_class = BikeSerializer
+
+# Rental ViewSet
+class RentalViewSet(viewsets.ModelViewSet):
+    queryset = Rental.objects.all()
+    serializer_class = RentalSerializer
+
+# Payment ViewSet
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+# Feedback ViewSet
+class FeedbackViewSet(viewsets.ModelViewSet):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
+# Inventory ViewSet
+class InventoryViewSet(viewsets.ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
